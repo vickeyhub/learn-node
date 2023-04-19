@@ -12,9 +12,17 @@ server.use((req, res, next) => {
     next();
 })
 
-// server.get('/', (req, res) => {
-//     res.json({type: 'GET1'});
-// });
+const auth = (req, res, next) => {
+    if(req.query.password == 123){
+        console.log(req.query.password);
+        next();
+    } else {
+        res.sendStatus(401);
+    }
+}
+
+server.use(auth);
+
 
 // API - Endpoints - Route
 server.get('/', (req, res) => {
