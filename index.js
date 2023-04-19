@@ -39,11 +39,22 @@ server.put("/products/:id", (req, res) => {
   const id = +req.params.id;
   const productIndex = products.findIndex((p) => p.id === id);
   products.splice(productIndex, 1, { ...req.body, id: id });
-  res.status(201).json({ 
+  res.status(201).json({
     type: "PUT",
     message: "updated",
- 
- });
+  });
+});
+
+// Update||Patch /products/:id
+server.patch("/products/:id", (req, res) => {
+  const id = +req.params.id;
+  const productIndex = products.findIndex((p) => p.id === id);
+  const product = products[productIndex]
+  products.splice(productIndex, 1, { ...product, ...req.body });
+  res.status(201).json({
+    type: "PATCH",
+    message: "updated with patch method",
+  });
 });
 
 // API - Endpoints - Route
