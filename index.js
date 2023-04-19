@@ -7,21 +7,31 @@ const express = require('express');
 
 const server = express();
 
+server.use((req, res, next) => {
+    console.log(req.method , req.ip, req.hostname, new Date(), req.get('User-Agent'));
+    next();
+})
+
+// server.get('/', (req, res) => {
+//     res.json({type: 'GET1'});
+// });
+
+// API - Endpoints - Route
 server.get('/', (req, res) => {
-    res.json({type: 'GET'});
+    res.json({ type: 'GET' });
 });
 server.post('/', (req, res) => {
-    res.json({type: 'POST'});
+    res.json({ type: 'POST' });
 });
 
 server.put('/', (req, res) => {
-    res.json({type:'PUT'})
+    res.json({ type: 'PUT' })
 });
 server.delete('/', (req, res) => {
-    res.json({type:'DELETE'})
+    res.json({ type: 'DELETE' })
 });
 server.patch('/', (req, res) => {
-    res.json({type:'PATCH'})
+    res.json({ type: 'PATCH' })
 });
 
 server.get('/demo', (req, res) => {
