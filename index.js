@@ -13,29 +13,22 @@ server.use(morgan("default"));
 server.use(express.static("public"));
 
 // REST APIs standard functions
-
-// Create POST /products C R U D
-server.post("/products", (req, res) => {
-  console.log(req.body);
+const getProducts = (req, res) => {
+  res.json(products);
+};
+const getProduct = (req, res) => {
+  const id = +req.params.id;
+  const product = products.find((p) => p.id === id);
+  res.json(product);
+};
+const createProduct = (req, res) => {
   products.push(req.body);
   res.json({
     message: "created",
     product_id: req.body.id,
   });
-});
-
-// Read GET /products
-server.get("/products", (req, res) => {
-  res.json(products);
-});
-server.get("/products/:id", (req, res) => {
-  const id = +req.params.id;
-  const product = products.find((p) => p.id === id);
-  res.json(product);
-});
-
-// Update||PUT /products/:id
-server.put("/products/:id", (req, res) => {
+};
+const updateProduct = (req, res) => {
   const id = +req.params.id;
   const productIndex = products.findIndex((p) => p.id === id);
   products.splice(productIndex, 1, { ...req.body, id: id });
@@ -43,10 +36,8 @@ server.put("/products/:id", (req, res) => {
     type: "PUT",
     message: "updated",
   });
-});
-
-// Update||Patch /products/:id
-server.patch("/products/:id", (req, res) => {
+};
+const replaceProduct = (req, res) => {
   const id = +req.params.id;
   const productIndex = products.findIndex((p) => p.id === id);
   const product = products[productIndex];
@@ -55,10 +46,8 @@ server.patch("/products/:id", (req, res) => {
     type: "PATCH",
     message: "updated with patch method",
   });
-});
-
-// Delete DELETE /products/:id
-server.delete("/products/:id", (req, res) => {
+};
+const deleteProduct = (req, res) => {
   const id = +req.params.id;
   const productIndex = products.findIndex((p) => p.id === id);
   const product = products[productIndex];
@@ -67,7 +56,19 @@ server.delete("/products/:id", (req, res) => {
     type: "PATCH",
     deleted_product: product,
   });
-});
+};
+
+// Create POST /products C R U D
+server.post("/products", createProduct);
+// Read GET /products
+server.get("/products", getProducts);
+server.get("/products/:id", getProduct);
+// Update||PUT /products/:id
+server.put("/products/:id", updateProduct);
+// Update||Patch /products/:id
+server.patch("/products/:id", replaceProduct);
+// Delete DELETE /products/:id
+server.delete("/products/:id", deleteProdcut);
 
 // API - Endpoints - Route
 server.get("/", (req, res) => {
