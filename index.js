@@ -9,59 +9,48 @@ const morgan = require("morgan");
 const server = express();
 
 server.use(express.json());
-server.use(morgan('default'));
+server.use(morgan("default"));
 server.use(express.static("public"));
 
+// REST APIs standard functions
 
-// server.use((req, res, next) => {
-//   console.log(
-//     req.method,
-//     req.ip,
-//     req.hostname,
-//     new Date(),
-//     req.get("User-Agent")
-//   );
-//   next();
-// });
+// Create POST /products C R U D
+server.post("/products", (req, res) => {
+  console.log(req.body);
+  products.push(req.body);
+  res.json({
+    message: "created",
+    product_id: req.body.id,
+  });
+});
 
-const auth = (req, res, next) => {
-  if (req.body.password == 123) {
-    next();
-  } else {
-    res.sendStatus(401);
-  }
-};
+// Read GET /products
+server.get("/products", (req, res) => {
+  res.json(products);
+});
+server.get("/products/:id", (req, res) => {
+  const id = +req.params.id;
+  const product = products.find((p) => p.id === id);
+  res.json(product);
+});
+
+// Update||PUT /products/:id
+server.put("/products/:id", (req, res) => {
+  const id = +req.params.id;
+  const productIndex = products.findIndex((p) => p.id === id);
+  products.splice(productIndex, 1, { ...req.body, id: id });
+  res.status(201).json({ 
+    type: "PUT",
+    message: "updated",
+ 
+ });
+});
 
 // API - Endpoints - Route
-server.get("/", auth, (req, res) => {
+server.get("/", (req, res) => {
   res.json({ type: "GET" });
 });
-server.get("/product/:id", (req, res) => {
-    res.json({
-        type: "GET",
-        id: req.params.id
-     });
-})
-server.post("/", auth, (req, res) => {
-  res.json({ type: "POST" });
-});
 
-server.put("/", (req, res) => {
-  res.json({ type: "PUT" });
-});
-server.delete("/", (req, res) => {
-  res.json({ type: "DELETE" });
-});
-server.patch("/", (req, res) => {
-  res.json({ type: "PATCH" });
-});
-
-server.get("/demo", (req, res) => {
-  // res.sendStatus(404);
-  res.status(200).send("<h1>hello</h1>");
-  // res.sendFile('C:/MERN/learn-node/index.html');
-  // res.json(products);
-});
 server.listen(8080, () => {
   console.log("Server started");
 });
