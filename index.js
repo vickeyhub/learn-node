@@ -49,11 +49,23 @@ server.put("/products/:id", (req, res) => {
 server.patch("/products/:id", (req, res) => {
   const id = +req.params.id;
   const productIndex = products.findIndex((p) => p.id === id);
-  const product = products[productIndex]
+  const product = products[productIndex];
   products.splice(productIndex, 1, { ...product, ...req.body });
   res.status(201).json({
     type: "PATCH",
     message: "updated with patch method",
+  });
+});
+
+// Delete DELETE /products/:id
+server.delete("/products/:id", (req, res) => {
+  const id = +req.params.id;
+  const productIndex = products.findIndex((p) => p.id === id);
+  const product = products[productIndex];
+  products.splice(productIndex, 1);
+  res.status(201).json({
+    type: "PATCH",
+    deleted_product: product,
   });
 });
 
