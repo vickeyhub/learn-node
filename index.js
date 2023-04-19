@@ -3,9 +3,14 @@ const fs = require('fs');
 const data = JSON.parse(fs.readFileSync('data/products.json', 'utf-8'));
 const products = data.products;
 
+// load the express application
 const express = require('express');
 
 const server = express();
+
+server.use(express.json());
+
+server.use(express.static('public'));
 
 server.use((req, res, next) => {
     console.log(req.method , req.ip, req.hostname, new Date(), req.get('User-Agent'));
@@ -13,22 +18,19 @@ server.use((req, res, next) => {
 })
 
 const auth = (req, res, next) => {
-    if(req.query.password == 123){
-        console.log(req.query.password);
+    if(req.body.password == 123){
         next();
     } else {
         res.sendStatus(401);
     }
 }
 
-server.use(auth);
-
 
 // API - Endpoints - Route
-server.get('/', (req, res) => {
+server.get('/',auth, (req, res) => {
     res.json({ type: 'GET' });
 });
-server.post('/', (req, res) => {
+server.post('/', auth, (req, res) => {
     res.json({ type: 'POST' });
 });
 
