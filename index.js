@@ -36,6 +36,12 @@ const auth = (req, res, next) => {
 server.get("/", auth, (req, res) => {
   res.json({ type: "GET" });
 });
+server.get("/product/:id", (req, res) => {
+    res.json({
+        type: "GET",
+        id: req.params.id
+     });
+})
 server.post("/", auth, (req, res) => {
   res.json({ type: "POST" });
 });
